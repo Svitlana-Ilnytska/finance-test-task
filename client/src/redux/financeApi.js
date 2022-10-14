@@ -22,12 +22,35 @@ export const financeApi = createApi({
               return data;
             });
           });
-        } catch {}
+        } catch {
+          console.log("error");
+        }
         await cacheEntryRemoved;
         socket.close();
       },
     }),
+    
+    addFinance: builder.mutation({
+      query: (ticker) => ({
+        url: "/",
+        method: "POST",
+        body: ticker,
+      }),
+      invalidatesTags: ["Finance"],
+    }),
+
+    removeFinance: builder.mutation({
+      query: (ticker) => ({
+        url: `/tickers/${ticker}`,
+        method: "DELETE",
+        body: ticker,
+      }),
+    }),
   }),
 });
 
-export const { useGetFinanceQuery } = financeApi;
+export const {
+  useGetFinanceQuery,
+  useAddFinanceMutation,
+  useRemoveFinanceMutation,
+} = financeApi;

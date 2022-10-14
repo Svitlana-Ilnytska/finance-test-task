@@ -1,17 +1,15 @@
-import { useGetFinanceQuery } from "./redux/financeApi";
+import FinanceList from "./components/FinanceList/FinanceList";
+import Header from "./components/Header/Header";
 
-import  FinanceList from "./components/FinanceList/FinanceList";
-import  Header from "./components/Header/Header";
-
-import "./App.css";
+import css from "./App.module.scss";
 
 function App() {
-  const { data } = useGetFinanceQuery();
-
   return (
     <div>
       <Header />
-      <FinanceList data={data} />
+      <div className={css.main}>
+        <FinanceList />
+      </div>
     </div>
   );
 }

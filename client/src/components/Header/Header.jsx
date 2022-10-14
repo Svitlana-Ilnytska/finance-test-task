@@ -8,10 +8,10 @@ function Header() {
     <header className={css.header}>
       <div className={css.currencyBoxes}>
         <div className={css.boxWithLogo}>
-          <LogoImage className={css.logoImage} />
-          <Logo className={css.logo} />
+          <LogoImage />
+          <Logo />
         </div>
-        <div className={css.boxes}> </div>
+        <div> </div>
       </div>
     </header>
   );
