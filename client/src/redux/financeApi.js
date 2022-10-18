@@ -1,5 +1,5 @@
 import { createApi, fetchBaseQuery } from "@reduxjs/toolkit/query/react";
-import { io } from "socket.io-client";
+import getSocket from "../socket";
 
 export const financeApi = createApi({
   reducerPath: "financeApi",
@@ -13,7 +13,7 @@ export const financeApi = createApi({
         _arg,
         { updateCachedData, cacheEntryRemoved, cacheDataLoaded }
       ) {
-        const socket = io("http://localhost:4000");
+        const socket = getSocket();
         try {
           await cacheDataLoaded;
           socket.emit("start");
