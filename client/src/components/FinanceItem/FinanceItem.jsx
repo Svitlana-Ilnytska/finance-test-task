@@ -4,20 +4,12 @@ import PropTypes from "prop-types";
 
 import css from "./FinanceItem.module.scss";
 
-const financeMap = new Map([
-  ["AAPL", "Apple"],
-  ["GOOGL", "Alphabet"],
-  ["MSFT", "Microsoft"],
-  ["AMZN", "Amazon"],
-  ["FB", "Facebook"],
-  ["TSLA", "Tesla"],
-]);
-
 const FinanceItem = ({
   ticker,
   price,
   change,
   change_percent,
+  displayName,
   onDeleteFinance,
 }) => {
   let timeout;
@@ -34,14 +26,10 @@ const FinanceItem = ({
     setActive(false);
   };
 
-  const getFinanceName = (ticker) => {
-    return financeMap.get(ticker);
-  };
-
   return (
     <>
       <div className={css.block}>
-        <span>{getFinanceName(ticker)} :</span> <span>{price} &#36; </span>
+        <span>{displayName} :</span> <span>{price} &#36; </span>
         <span>{change} &#36;</span> <span>{change_percent} &#37;</span>
         <div
           className={css.tooltipWrapper}

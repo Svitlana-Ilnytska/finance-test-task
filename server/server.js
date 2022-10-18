@@ -1,20 +1,22 @@
-'use strict';
-const express = require('express');
-const http = require('http');
-const io = require('socket.io');
-const cors = require('cors');
+"use strict";
+const express = require("express");
+const http = require("http");
+const io = require("socket.io");
+const cors = require("cors");
 
 const FETCH_INTERVAL = 5000;
 const PORT = process.env.PORT || 4000;
 
-const tickers = [
-  'AAPL', // Apple
-  'GOOGL', // Alphabet
-  'MSFT', // Microsoft
-  'AMZN', // Amazon
-  'FB', // Facebook
-  'TSLA', // Tesla
-];
+let timer;
+
+const tickers = new Map([
+  ["AAPL", "Apple"],
+  ["GOOGL", "Alphabet"],
+  ["MSFT", "Microsoft"],
+  ["AMZN", "Amazon"],
+  ["FB", "Facebook"],
+  ["TSLA", "Tesla"],
+]);
 
 function randomValue(min = 0, max = 1, precision = 0) {
   const random = Math.random() * (max - min) + min;
@@ -23,35 +25,47 @@ function randomValue(min = 0, max = 1, precision = 0) {
 
 function utcDate() {
   const now = new Date();
-  return new Date(now.getUTCFullYear(), now.getUTCMonth(), now.getUTCDate(), now.getUTCHours(), now.getUTCMinutes(), now.getUTCSeconds());
+  return new Date(
+    now.getUTCFullYear(),
+    now.getUTCMonth(),
+    now.getUTCDate(),
+    now.getUTCHours(),
+    now.getUTCMinutes(),
+    now.getUTCSeconds()
+  );
 }
 
-function getQuotes(socket) {
-
-  const quotes = tickers.map(ticker => ({
+function getQuotes() {
+  const quotes = Array.from(tickers).map(([ticker, displayName]) => ({
     ticker,
-    exchange: 'NASDAQ',
+    exchange: "NASDAQ",
     price: randomValue(100, 300, 2),
     change: randomValue(0, 200, 2),
     change_percent: randomValue(0, 1, 2),
     dividend: randomValue(0, 1, 2),
     yield: randomValue(0, 2, 2),
     last_trade_time: utcDate(),
+    displayName,
   }));
 
-  socket.emit('ticker', quotes);
+  socketServer.emit("ticker", quotes);
 }
 
-function trackTickers(socket) {
-  // run the first time immediately
-  getQuotes(socket);
-
+function trackTickers(socket, delay) {
+  if (timer !== undefined) {
+    clearInterval(timer);
+  } else {
+    // run the first time immediately
+    getQuotes();
+  }
+  console.log(`SETTING THE DELAY TO ${delay}`);
   // every N seconds
-  const timer = setInterval(function() {
-    getQuotes(socket);
-  }, FETCH_INTERVAL);
+  timer = setInterval(function () {
+    getQuotes();
+  }, delay);
 
-  socket.on('disconnect', function() {
+  socket.on("disconnect", function () {
+    console.log("DISCONNECT");
     clearInterval(timer);
   });
 }
@@ -63,16 +77,45 @@ const server = http.createServer(app);
 const socketServer = io(server, {
   cors: {
     origin: "*",
-  }
+  },
 });
 
-app.get('/', function(req, res) {
-  res.sendFile(__dirname + '/index.html');
+app.get("/", function (req, res) {
+  res.sendFile(__dirname + "/index.html");
 });
 
-socketServer.on('connection', (socket) => {
-  socket.on('start', () => {
-    trackTickers(socket);
+socketServer.on("connection", (socket) => {
+  socket.on("start", () => {
+    console.log("CONNECTION STARTED");
+    trackTickers(socket, FETCH_INTERVAL);
+  });
+
+  socket.on("changeDelay", (arg) => {
+    console.log(`RECEIVED ${arg}`);
+    if (arg > 0) {
+      trackTickers(socket, arg * 1000);
+    } else {
+      console.warn(`${arg} is an invalid delay`);
+    }
+  });
+
+  socket.on("addTicker", (arg) => {
+    console.log(`Adding ticker ${JSON.stringify(arg)}`);
+    if (tickers.has(arg.ticker)) {
+      console.warn(`Can't add ${arg.ticker}: ticker already exists`);
+    } else {
+      tickers.set(arg.ticker, arg.displayName);
+      getQuotes();
+    }
+  });
+
+  socket.on("removeTicker", (arg) => {
+    console.log(`Removing ticker ${arg}`);
+    if (!tickers.delete(arg)) {
+      console.warn(`Failed to delete ${arg}`);
+    } else {
+      getQuotes();
+    }
   });
 });
 

@@ -29,22 +29,19 @@ export const financeApi = createApi({
         socket.close();
       },
     }),
-    
+
     addFinance: builder.mutation({
-      query: (ticker) => ({
-        url: "/",
-        method: "POST",
-        body: ticker,
-      }),
-      invalidatesTags: ["Finance"],
+      queryFn(arg) {
+        getSocket().emit("addTicker", arg);
+        return {data : null};
+      }
     }),
 
     removeFinance: builder.mutation({
-      query: (ticker) => ({
-        url: `/tickers/${ticker}`,
-        method: "DELETE",
-        body: ticker,
-      }),
+      queryFn(arg) {
+        getSocket().emit("removeTicker", arg);
+        return {data : null};
+      }
     }),
   }),
 });

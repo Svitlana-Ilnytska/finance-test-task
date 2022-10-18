@@ -6,3 +6,18 @@
     list-style: none;
   }
 }
+
+
+.button {
+  background: #e5b349;
+  cursor: pointer;
+  width: 155px;
+  height: 20px;
+  border-radius: 4px;
+  border: transparent;
+  display: flex;
+  align-items: center;
+  justify-content: space-around;
+  padding: 14px;
+  margin-top: 20px;
+}
