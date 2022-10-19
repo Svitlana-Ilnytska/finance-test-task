@@ -11,6 +11,15 @@
   opacity: 0;
   pointer-events: none;
   transition: 0.5s;
+
+  .modalContent {
+    padding: 20px;
+    border-radius: 6px;
+    background-color: #fff;
+    height: 200px;
+    width: 200px;
+    font-family: "Montserrat", sans-serif;
+  }
 }
 
 .active {
@@ -18,47 +27,35 @@
   pointer-events: all;
 }
 
-.modalContent {
-  padding: 20px;
-  border-radius: 6px;
-  background-color: #fff;
-  height: 200px;
-  width: 200px;
-  font-family: "Montserrat", sans-serif;
-}
-
-.title {
-  font-size: 16px;
-  margin-right: 8px;
-  text-align: center;
-}
-
 .form {
   display: flex;
   flex-direction: column;
   align-items: stretch;
-}
 
-.input {
-  margin-bottom: 15px;
-}
+  .title {
+    font-size: 16px;
+    margin-right: 8px;
+    text-align: center;
+  }
+  .input {
+    margin-bottom: 15px;
+  }
 
-.button {
-  background: #e5b349;
-  cursor: pointer;
-  height: 20px;
-  border-radius: 4px;
-  border: transparent;
-  display: flex;
-  align-items: center;
-  justify-content: space-around;
-  padding: 14px;
-  margin-top: 10px;
-}
+  .button {
+    background: #e5b349;
+    cursor: pointer;
+    height: 20px;
+    border-radius: 4px;
+    border: transparent;
+    display: flex;
+    align-items: center;
+    justify-content: space-around;
+    padding: 14px;
+    margin-top: 10px;
+  }
 
-
-.label {
+  .label {
     font-size: 13px;
     margin-bottom: 3px;
-
+  }
 }

@@ -5,8 +5,9 @@ import {
   useRemoveFinanceMutation,
   useAddFinanceMutation,
 } from "../../redux/financeApi";
-import { ReactComponent as AddButton } from "../../assets/plus.svg";
 import Popup from "../Popup/Popup";
+import { ReactComponent as AddButton } from "../../assets/plus.svg";
+
 import css from "./FinanceList.module.scss";
 
 const FinanceList = () => {
@@ -17,13 +18,13 @@ const FinanceList = () => {
   const [removeFinance] = useRemoveFinanceMutation();
   const [addFinance] = useAddFinanceMutation();
 
+  const handleClick = () => {
+    setPopupActive(true);
+  };
+
   return (
     <div>
-      <button
-        type="button"
-        onClick={() => setPopupActive(true)}
-        className={css.button}
-      >
+      <button type="button" onClick={handleClick} className={css.button}>
         <AddButton /> Add new ticker
       </button>
 
@@ -38,7 +39,11 @@ const FinanceList = () => {
         ))}
       </ul>
 
-      <Popup active={popupActive} setActive={setPopupActive} addFinance={addFinance} />
+      <Popup
+        active={popupActive}
+        setActive={setPopupActive}
+        addFinance={addFinance}
+      />
     </div>
   );
 };

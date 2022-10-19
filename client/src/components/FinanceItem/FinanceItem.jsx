@@ -5,7 +5,6 @@ import PropTypes from "prop-types";
 import css from "./FinanceItem.module.scss";
 
 const FinanceItem = ({
-  ticker,
   price,
   change,
   change_percent,
@@ -27,35 +26,28 @@ const FinanceItem = ({
   };
 
   return (
-    <>
-      <div className={css.block}>
-        <span>{displayName} :</span> <span>{price} &#36; </span>
-        <span>{change} &#36;</span> <span>{change_percent} &#37;</span>
-        <div
-          className={css.tooltipWrapper}
-          onMouseEnter={showTip}
-          onMouseLeave={hideTip}
-        >
-          <button
-            type="button"
-            onClick={onDeleteFinance}
-            className={css.button}
-          >
-            <DeleteButton />
-          </button>
-          {active && (
-            <div className={`${css.tooltip} ${css.right}`}>Remove</div>
-          )}
-        </div>
+    <div className={css.block}>
+      <span>{displayName} :</span> <span>{price} &#36; </span>
+      <span>{change} &#36;</span> <span>{change_percent} &#37;</span>
+      <div
+        className={css.tooltipWrapper}
+        onMouseEnter={showTip}
+        onMouseLeave={hideTip}
+      >
+        <button type="button" onClick={onDeleteFinance} className={css.button}>
+          <DeleteButton />
+        </button>
+        {active && <div className={`${css.tooltip} ${css.right}`}>Remove</div>}
       </div>
-    </>
+    </div>
   );
 };
 
 FinanceItem.propTypes = {
-  ticker: PropTypes.string.isRequired,
+  displayName: PropTypes.string.isRequired,
   price: PropTypes.string.isRequired,
   change: PropTypes.string.isRequired,
+  change_percent: PropTypes.string.isRequired,
   onDeleteItem: PropTypes.func,
 };
 
