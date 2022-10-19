@@ -110,10 +110,10 @@ socketServer.on("connection", (socket) => {
   });
 
   socket.on("removeTicker", (arg) => {
-    console.log(`Removing ticker ${arg}`);
     if (!tickers.delete(arg)) {
       console.warn(`Failed to delete ${arg}`);
     } else {
+      console.log(`Removing ticker ${arg}`);
       getQuotes();
     }
   });

@@ -1,9 +1,12 @@
 import { useState } from "react";
+import { useGetFinanceQuery } from "../../redux/financeApi";
 import css from "./Popup.module.scss";
 
 function Popup({ active, setActive, addFinance }) {
   const [ticker, setTicker] = useState("");
   const [displayName, setDisplayName] = useState("");
+
+  const { data: items } = useGetFinanceQuery();
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -29,6 +32,13 @@ function Popup({ active, setActive, addFinance }) {
       ticker,
       displayName,
     };
+
+    const theSameTicker = items.some((item) =>
+      item.ticker.toLowerCase().includes(newTicker.ticker.toLowerCase())
+    );
+
+    if (theSameTicker)
+      return alert(`${newTicker.displayName}  is already in list.`);
 
     addFinance(newTicker);
     setTicker("");
